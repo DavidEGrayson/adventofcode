@@ -35,42 +35,16 @@ def possible_next_coords(time, coords)
   end
 end
 
-def manhattan_distance(coords1, coords2)
-  (coords1[0] - coords2[0]).abs + (coords1[1] - coords2[1]).abs
-end
-
-# Do pathfinding with a priority queue.
-# Each entry is an array with:
-#   [0] = best_case_score: best possible total time to reach destination
-#   [1] = time: the current time, modulo phase_count
-#   [2] = coords: the current coordinates where we are
-#   [3] = path: the path we used to get here, for debugging
 def find_path(time, start, goal)
-  queue = [ [nil, time, start] ]
-  visited = Set.new
-  iteration_count = 0
+  frontier = [ start ]
   while true
-    bcs, time, coords, path = queue.shift
-
-    visitation_state = [time, coords]
-    next if visited.include?(visitation_state)
-    visited << visitation_state
-
-    if (iteration_count % 10000) == 0 && iteration_count > 0
-      puts "Analyzing time=#{time} coords=#{coords}, queue=#{queue.size}"
+    new_frontier = Set.new
+    return time if frontier.include?(goal)
+    frontier.each do |coords|
+      new_frontier.merge possible_next_coords(time, coords)
     end
-
-    return time if coords == goal  # success
-
-    next_time = time + 1
-    possible_next_coords(time, coords).each do |next_coords|
-      best_case_score = next_time + manhattan_distance(next_coords, goal)
-      entry = [best_case_score, next_time, next_coords, (path + [next_coords] if path)]
-      index = queue.each_index.find { |i| queue[i][0] > entry[0] } || queue.size
-      queue.insert(index, entry)
-    end
-
-    iteration_count += 1
+    time += 1
+    frontier = new_frontier
   end
 end
 
