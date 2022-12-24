@@ -46,7 +46,7 @@ end
 #   [2] = coords: the current coordinates where we are
 #   [3] = path: the path we used to get here, for debugging
 def find_path(time, start, goal)
-  queue = [ [nil, time, start, [start] ] ]
+  queue = [ [nil, time, start] ]
   visited = Set.new
   iteration_count = 0
   while true
@@ -65,7 +65,7 @@ def find_path(time, start, goal)
     next_time = time + 1
     possible_next_coords(time, coords).each do |next_coords|
       best_case_score = next_time + manhattan_distance(next_coords, goal)
-      entry = [best_case_score, next_time, next_coords, path + [next_coords]]
+      entry = [best_case_score, next_time, next_coords, (path + [next_coords] if path)]
       index = queue.each_index.find { |i| queue[i][0] > entry[0] } || queue.size
       queue.insert(index, entry)
     end
