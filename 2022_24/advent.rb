@@ -78,8 +78,7 @@ valley_entrance = [valley.first.index('.'), 0]
 valley_exit = [valley.last.index('.'), valley.size - 1]
 
 time = find_path(0, valley_entrance, valley_exit)
-puts time
+puts "Part 1: #{time}"
 time = find_path(time, valley_exit, valley_entrance)
-puts time
 time = find_path(time, valley_entrance, valley_exit)
-puts time
+puts "Part 2: #{time}"
